@@ -5,6 +5,10 @@ const engines = {
         "url": "https://google.com/search?q={query}",
         "name": "Google"
     },
+    "i": {
+        "url": "https://www.google.com/search?q={query}}&tbm=isch",
+        "name": "Google Images"
+    },
     "imdb": {
         "url": "https://www.imdb.com/find?q={query}",
         "name": "IMDb"
