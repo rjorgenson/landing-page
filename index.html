@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+    <script type="text/javascript">
+        window.onload = function () {
+            var element = document.getElementById('omni-search');
+            element.focus()
+        }
+
+        // Define search engine endpoints and their keywords
+        const engines = {
+            "default": "g",
+            "g": {
+                "url": "https://google.com/search?q={query}",
+                "name": "Google"
+            },
+            "imdb": {
+                "url": "https://www.imdb.com/find?q={query}",
+                "name": "IMDb"
+            }
+        }
+
+        const stripProtocol = function(u) {
+            return u.replace(/(^\w+:|^)\/\//, '')
+        }
+
+        const hasProtocol = function(u) {
+            protocolRegex = new RegExp(/^(\w+:|^)\/\//)
+            if (u.match(protocolRegex)) {
+                return true
+            }
+            return false
+        }
+
+        const isUrl = function(q) {
+            // return true if q is a valid URL
+            urlRegex = new RegExp(/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/)
+            if (stripProtocol(q).match(urlRegex)) {
+                return true
+            }
+            return false
+        }
+
+        const buildUrl = function(e, q) {
+            if (e === "url") {
+                if (hasProtocol(q)) {
+                    return q
+                }
+                return "http://" + q
+            }
+
+            // build URL for passed engine if configured
+            return engines[e]['url'].replace('{query}', encodeURI(q))
+        }
+
+        const setEngine = function(e) {
+            document.getElementById('omni-engine').innerHTML = engines[e]['name']
+            document.getElementById('omni-engine-key').innerHTML = e
+        }
+
+        const removeEngine = function() {
+            document.getElementById('omni-engine').innerHTML = ""
+            document.getElementById('omni-engine-key').innerHTML = ""
+        }
+
+        const detectEngine = function(event) {
+            // grab value of text box to strip engine out of
+            query = document.getElementById('omni-search').value
+            // Grab first word from search query and return if there isn't a match
+            match = query.match(/(^\w+\s)/)
+
+            engine = match ? match[1].trim() : false
+
+            if (engine in engines) {
+                setEngine(engine)
+            } else {
+                removeEngine()
+            }
+        }
+
+        const doQuery = function() {
+            let url = ""
+            let query = document.getElementById('omni-search').value
+            let engine = document.getElementById('omni-engine-key').innerHTML
+
+            // if query is a valud url just go
+            if (isUrl(query)) {
+                engine = "url"
+            }
+
+            if (engine !== "") { // if an engine was already selected generate URL and go
+                url = new URL(buildUrl(engine, query.replace(engine + " ", "")))
+            } else { // no engine and not a url, use default engine
+                url = new URL(buildUrl(engines["default"], query))
+            }
+
+            window.location.href = url.toString()
+        }
+    </script>
+    <style type="text/css">
+        html, body {
+            background-color: black;
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            display:flex;
+            align-items:center;
+        }
+
+        #omni-search-wrapper {
+            width: 95%;
+            min-height: 95%;
+            text-align: center;
+            margin: 0 auto;
+            display:flex;
+            align-items:center;
+        }
+
+        #omni-search {
+            width: 80%;
+            display: block;
+            padding-left: 35px;
+            margin: 0 auto;
+            font-size: 35px;
+            border: 0 none;
+            height: 96px;
+            outline: none;
+            background-color: grey;
+            box-sizing: border-box;
+            transition: all 0.15s;
+        }
+
+        #omni-form {
+            width: 100%;
+        }
+
+        #omni-engine {
+            color: white;
+        }
+
+        #omni-engine-key {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div id="omni-search-wrapper">
+    <form onsubmit="doQuery()" id="omni-form" action="javascript:void(0);">
+        <input type="text" name="omni-search" id="omni-search" placeholder="search..."
+            onkeydown="detectEngine(event)" onFocus="this.select()" autofocus />
+        <span id="omni-engine"></span>
+        <span id="omni-engine-key"></span>
+        <input type="submit" hidden />
+    </form>
+    </div>
+</body>
+</html>
