@@ -12,6 +12,10 @@ const engines = {
     "imdb": {
         "url": "https://www.imdb.com/find?q={query}",
         "name": "IMDb"
+    },
+    "a": {
+        "url": "https://www.amazon.com/s?k={query}",
+        "name": "Amazon"
     }
 }
 
