@@ -33,7 +33,7 @@ const hasProtocol = function(u) {
 
 const isUrl = function(q) {
     // return true if q is a valid URL
-    urlRegex = new RegExp(/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/)
+    urlRegex = new RegExp(/^[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/)
     if (stripProtocol(q).match(urlRegex)) {
         return true
     }
