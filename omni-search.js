@@ -6,7 +6,7 @@ const engines = {
         "name": "Google"
     },
     "i": {
-        "url": "https://www.google.com/search?q={query}}&tbm=isch",
+        "url": "https://www.google.com/search?q={query}&tbm=isch",
         "name": "Google Images"
     },
     "imdb": {
